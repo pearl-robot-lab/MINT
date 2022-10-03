@@ -1,6 +1,6 @@
 # MINT
-Code for submission : An information-theoretic approach to unsupervised keypoint representation learning <br>
-[Project website](https://sites.google.com/view/mint-kp/home)
+Maximum Information keypoiNTs : An information-theoretic approach to unsupervised keypoint representation learning <br>
+[Paper](https://arxiv.org/abs/2209.15404), [Project website](https://sites.google.com/view/mint-kp/home)
 
 The code structre:
 ```
@@ -132,6 +132,17 @@ You can get the final statstics offline by running:
 ```
 import sys
 sys.path.append('src')
+```
+
+## Citation
+If you make use of this code in your own work, please cite our paper:
+```
+@article{younes2022mint,
+  title={An information-theoretic approach to unsupervised keypoint representation learning},
+  author={Younes, Ali and Schaub-Meyer, Simone and Chalvatzaki, Georgia},
+  journal={arXiv preprint arXiv:2209.15404},
+  year={2022}
+}
 ```
 
 
