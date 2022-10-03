@@ -1,5 +1,6 @@
 # MINT
-Code for submission : An information-theoretic approach to unsupervised keypoint representation learning
+Code for submission : An information-theoretic approach to unsupervised keypoint representation learning <br>
+[Project website](https://sites.google.com/view/mint-kp/home)
 
 The code structre:
 ```
