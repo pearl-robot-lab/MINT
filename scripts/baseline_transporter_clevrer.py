@@ -16,42 +16,50 @@ def set_seed(seed):
   np.random.seed(seed)
   
 def run_experiment(model_name, params):
-    print('Running experiment {0}'.format(model_name))
+    print("Running experiment {0}".format(model_name))
     if params is not None:
         for key in params:
-            config_data[key]=params[key]
-    results=[]
+            config_data[key] = params[key]
+    results = []
     for seed in seeds:
         set_seed(seed)
-        model_name_seed=model_name+"_seed={0}".format(seed)
-        config_data['model_name']=model_name_seed
-        wandb.init(project="CLEVRER_seeds", name=model_name_seed,
-                # anonymous="allow",
-                config=config_data, 
-                # mode="disabled"
-                )
-        agent=TransporterAgent(config_data, args, dataset='CLEVRER')
+        model_name_seed = model_name + "_seed={0}".format(seed)
+        config_data["model_name"] = model_name_seed
+        wandb.init(
+            project="CLEVRER_seeds",
+            name=model_name_seed,
+            group=model_name,
+            # anonymous="allow",
+            config=config_data,
+            mode="disabled"
+        )
+        agent = TransporterAgent(config_data, args, dataset="CLEVRER")
         agent.train()
-        for i in trange(config_data['evaluation_epochs'], desc='Evaluation'):
+        for i in trange(config_data["evaluation_epochs"], desc="Evaluation"):
             agent.collect_qual_results()
-            result=agent.report_results()
+            result = agent.report_results()
             results.append(result)
         wandb.run.finish()
-    results=pd.concat(results)
-    mean=results.mean()
-    std=results.std()
-    confidence_interval=2*std / np.sqrt(len(seeds))
-    data={}
+    results = pd.concat(results)
+    mean = results.mean()
+    std = results.std()
+    confidence_interval = 2 * std / np.sqrt(len(seeds))
+    data = {}
     for key in mean.keys():
-        data[key]=[mean[key],confidence_interval[key]]
-    final_results=pd.DataFrame.from_dict(data, orient='index', columns=['mean','confidence_interval'])
-    wandb.init(project="CLEVRER_seeds", name=model_name,
-                # anonymous="allow",
-                config=config_data, 
-                # mode="disabled"
-                )
-    table=wandb.Table(dataframe=final_results)
-    wandb.log({"Statistics over seeds" : table})
+        data[key] = [mean[key], confidence_interval[key]]
+    final_results = pd.DataFrame.from_dict(
+        data, orient="index", columns=["mean", "confidence_interval"]
+    )
+    wandb.init(
+        project="CLEVRER_seeds",
+        name=model_name,
+        group=model_name,
+        # anonymous="allow",
+        config=config_data,
+        # mode="disabled"
+    )
+    table = wandb.Table(dataframe=final_results)
+    wandb.log({"Statistics over seeds": table})
     wandb.run.finish()
 
 

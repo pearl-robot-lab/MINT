@@ -35,6 +35,7 @@ config_init={
     'bandwidth':0.001,
     'beta_for_overlapping_loss':4.0, # don't allow more than 4 keypoints to overlap
     'kappa_for_it_loss':0.9, # the contribution of the conditional entropy in the construction
+    'movement_weight':1.0,
     'std_for_heatmap':7.0,
     'threshold_for_heatmap':0.2,
     'thresholded_heatmap_scale':3.5,

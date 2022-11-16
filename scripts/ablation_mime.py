@@ -34,15 +34,16 @@ config_init={
     'bandwidth':0.001,
     'alpha_for_status_loss':5.0,
     'beta_for_overlapping_loss':4.0,
-    'std_for_heatmap':9.0,
-    'threshold_for_heatmap':0.1,
-    'thresholded_heatmap_scale':3.5,
-    'masked_entropy_loss_weight':0.0,
-    'conditional_entropy_loss_weight':0.0,
-    'status_weight':0.0,
-    'difference_weight':0.0,
-    'information_transport_loss_weight':0.0,
-    'overlap_weight':0.0,
+    "kappa_for_it_loss": 0.9,  # the contribution of the conditional entropy in the construction
+    "movement_weight": 1.0,
+    "std_for_heatmap": 9.0,
+    "threshold_for_heatmap": 0.1,
+    "thresholded_heatmap_scale": 3.5,
+    "masked_entropy_loss_weight": 0.0,
+    "conditional_entropy_loss_weight": 0.0,
+    "status_weight": 0.0,
+    "information_transport_loss_weight": 0.0,
+    "overlap_weight": 0.0,
 }
 
 def run_experiment(model_name, params):
@@ -62,8 +63,41 @@ def run_experiment(model_name, params):
   wandb.run.finish()
 
 # reset the config to config init
-config=config_init.copy()
-run_experiment(model_name='(Ablation) IM', params={'masked_entropy_loss_weight' : 100.0, 'conditional_entropy_loss_weight' : 100.0})
-run_experiment(model_name='(Ablation) IM + IT', params={'information_transport_loss_weight': 20.0})
-run_experiment(model_name='(Ablation) IM + IT + S', params={'overlap_weight' : 30.0})
-run_experiment(model_name='(Ablation) IM + IT + S + O', params={'status_weight': 10.0})
+config = config_init.copy()
+ablation_params = {
+    "activation_score_threshold": 15,
+    "region_size": 3,
+    "std_for_heatmap": 9.0,
+    "threshold_for_heatmap": 0.1,
+    "thresholded_heatmap_scale": 3.5,
+    "bandwidth": 0.001,
+    "beta_for_overlapping_loss": 0.0,  # Regularization # don't allow more than 4 keypoints to overlap
+    "kappa_for_it_loss": 0.9,  # the contribution of the conditional entropy in the construction
+    "movement_weight": 0.0, # Regularization
+    "masked_entropy_loss_weight": 100.0, # Info.
+    "conditional_entropy_loss_weight": 100.0, # Info.
+    "status_weight": 0.0, # Regularization
+    "information_transport_loss_weight": 20.0, # Info.
+    "overlap_weight": 0.0, # Regularization
+}
+run_experiment(model_name="MINTwoReg_MIME", params=ablation_params)
+
+# reset the config to config init
+config = config_init.copy()
+ablation_params = {
+    "activation_score_threshold": 15,
+    "region_size": 3,
+    "std_for_heatmap": 9.0,
+    "threshold_for_heatmap": 0.1,
+    "thresholded_heatmap_scale": 3.5,
+    "bandwidth": 0.001,
+    "beta_for_overlapping_loss": 4.0, # Static
+    "kappa_for_it_loss": 0.0, # Temporal 
+    "movement_weight": 0.0, # Temporal
+    "masked_entropy_loss_weight": 100.0, # Static
+    "conditional_entropy_loss_weight": 0.0, # Temporal
+    "status_weight": 10.0, # Static
+    "information_transport_loss_weight": 0.0, # Temporal
+    "overlap_weight": 30.0, # Static
+}
+run_experiment(model_name="MINT_static_MIME", params=ablation_params)

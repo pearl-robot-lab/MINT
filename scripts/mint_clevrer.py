@@ -34,6 +34,7 @@ config_init={
     'bandwidth':0.001,
     'beta_for_overlapping_loss':4.0, # don't allow more than 4 keypoints to overlap
     'kappa_for_it_loss':0.9, # the contribution of the conditional entropy in the construction
+    'movement_weight':1.0,
     'std_for_heatmap':9.0,
     'threshold_for_heatmap':0.1,
     'thresholded_heatmap_scale':3.5,
@@ -51,44 +52,54 @@ def set_seed(seed):
   torch.cuda.manual_seed(seed)
   np.random.seed(seed)
         
-def run_experiment(model_name, params=None):
-  print('Running experiment {0}'.format(model_name))
-  if params is not None:
-    for key in params:
-      config[key]=params[key]
-  results=[]
-  for seed in seeds:
-    set_seed(seed)
-    model_name_seed=model_name+"_seed={0}".format(seed)
-    config['model_name']=model_name_seed
-    wandb.init(project="CLEVRER_seeds", name=model_name_seed,
-              # anonymous="allow",
-              config=config, 
-              # mode="disabled"
-              )
-    agent=MINT_agent(config, dataset='CLEVRER')
-    agent.train()
-    for i in trange(config['evaluation_epochs'], desc='Evaluation'):
-      agent.collect_qual_results()
-    result=agent.report_results()
-    results.append(result)
+def run_experiment(model_name, group_name=None, params=None):
+    if group_name is None:
+        group_name=model_name
+    print("Running experiment {0}".format(model_name))
+    if params is not None:
+        for key in params:
+            config[key] = params[key]
+    results = []
+    for seed in seeds:
+        set_seed(seed)
+        model_name_seed = model_name + "_seed={0}".format(seed)
+        config["model_name"] = model_name_seed
+        wandb.init(
+            project="CLEVRER_seeds",
+            name=model_name_seed,
+            group=group_name,
+            # anonymous="allow",
+            config=config,
+            # mode="disabled"
+        )
+        agent = MINT_agent(config, dataset="CLEVRER")
+        agent.train()
+        for i in trange(config["evaluation_epochs"], desc="Evaluation"):
+            agent.collect_qual_results()
+        result = agent.report_results()
+        results.append(result)
+        wandb.run.finish()
+    results = pd.concat(results)
+    mean = results.mean()
+    std = results.std()
+    confidence_interval = 2 * std / np.sqrt(len(seeds))
+    data = {}
+    for key in mean.keys():
+        data[key] = [mean[key], confidence_interval[key]]
+    final_results = pd.DataFrame.from_dict(
+        data, orient="index", columns=["mean", "confidence_interval"]
+    )
+    wandb.init(
+        project="CLEVRER_seeds",
+        name=model_name,
+        group=group_name,
+        # anonymous="allow",
+        config=config,
+        # mode="disabled"
+    )
+    table = wandb.Table(dataframe=final_results)
+    wandb.log({"Statistics over seeds": table})
     wandb.run.finish()
-  results=pd.concat(results)
-  mean=results.mean()
-  std=results.std()
-  confidence_interval=2*std / np.sqrt(len(seeds))
-  data={}
-  for key in mean.keys():
-      data[key]=[mean[key],confidence_interval[key]]
-  final_results=pd.DataFrame.from_dict(data, orient='index', columns=['mean','confidence_interval'])
-  wandb.init(project="CLEVRER_seeds", name=model_name,
-              # anonymous="allow",
-              config=config, 
-              # mode="disabled"
-              )
-  table=wandb.Table(dataframe=final_results)
-  wandb.log({"Statistics over seeds" : table})
-  wandb.run.finish()
   
 
 # reset the config to config init
