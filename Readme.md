@@ -66,6 +66,7 @@ conda activate mint
 python scripts/mint_clevrer.py
 python scripts/baseline_transporter_clevrer.py
 python scripts/baseline_videostructure_clevrer.py
+python scripts/ablation_clevrer.py
 ```
 Each scripts will train the corresponding keypoint detector for 5 seeds.
 The evaluations run automatically after the training.
@@ -101,6 +102,7 @@ conda activate mint
 python scripts/mint_<dataset>.py
 python scripts/baseline_transporter_<dataset>.py
 python scripts/baseline_videostructure_<dataset>.py
+python scripts/ablation_<dataset>.py
 ```
 The evaluations run automatically after the training.
 We save the evaluation videos with the keypoints to `videos` folder.
