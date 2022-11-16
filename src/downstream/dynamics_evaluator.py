@@ -106,7 +106,6 @@ class DynamicsEvaluator():
         data_frame=pd.DataFrame({"Success rate - 1 step prediction" : self.success_rates[0],
                                  "Success rate - 2 steps prediction" : self.success_rates[1],
                                  "Success rate - 3 steps prediction" : self.success_rates[2],
-                                 "Success rate - 4 steps prediction" : self.success_rates[3],
                                  })
         table=wandb.Table(dataframe=data_frame)
         wandb.log({"Results" : table})

@@ -35,7 +35,7 @@ class DynamicsAgent(nn.Module):
         self.dataloader=DataLoader(self.dataset,batch_size=config['batch_size'],shuffle=True)
         # self.dataset.show_sample(100)
         # initialize the keypoints detector
-        if method=='MINT':
+        if method == "MINT" or method =="MINTwoR":
             self.kp_detector=KeypointDetector(config).to(device)
         elif method=='Transporter':
             # initialize the model
@@ -121,7 +121,7 @@ class DynamicsAgent(nn.Module):
 
     def detect_keypoints(self, data):
         N,SF,C,H,W=data.shape
-        if self.method=='MINT':
+        if self.method == "MINT" or self.method =="MINTwoR":
             # reshape data
             data=data.view(-1,*data.shape[-3:])
             coords, status = self.kp_detector(data)

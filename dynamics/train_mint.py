@@ -47,45 +47,55 @@ def set_seed(seed):
   np.random.seed(seed)
         
 def run_experiment(model_name, params=None):
-  print('Running experiment {0}'.format(model_name))
-  if params is not None:
-    for key in params:
-      config[key]=params[key]
-  results=[]
-  for seed in seeds:
-    set_seed(seed)
-    model_name_seed=model_name+"_seed={0}".format(seed)
-    config['model_name']=model_name_seed
-    wandb.init(project="Dynamics", name=model_name_seed,
-              # anonymous="allow",
-              config=config, 
-              # mode="disabled"
-              )
-    agent=DynamicsAgent(config, method='MINT')
-    agent.train()
-    for i in trange(config['evaluation_epochs'], desc='Evaluation'):
-      agent.collect_qual_results()
-    result=agent.report_results()
-    results.append(result)
+    print("Running experiment {0}".format(model_name))
+    if params is not None:
+        for key in params:
+            config[key] = params[key]
+    results = []
+    for seed in seeds:
+        set_seed(seed)
+        model_name_seed = model_name + "_seed={0}".format(seed)
+        config["model_name"] = model_name_seed
+        wandb.init(
+            project="Dynamics",
+            name=model_name_seed,
+            group=model_name,
+            # anonymous="allow",
+            config=config,
+            # mode="disabled"
+        )
+        agent = DynamicsAgent(config, method="MINT") # MINTwoR or MINT
+        agent.train()
+        for i in trange(config["evaluation_epochs"], desc="Evaluation"):
+            agent.collect_qual_results()
+        result = agent.report_results()
+        results.append(result)
+        wandb.run.finish()
+    results = pd.concat(results)
+    mean = results.mean()
+    std = results.std()
+    confidence_interval = 2 * std / np.sqrt(len(seeds))
+    data = {}
+    for key in mean.keys():
+        data[key] = [mean[key], confidence_interval[key]]
+    final_results = pd.DataFrame.from_dict(
+        data, orient="index", columns=["mean", "confidence_interval"]
+    )
+    wandb.init(
+        project="Dynamics",
+        name=model_name,
+        group=model_name,
+        # anonymous="allow",
+        config=config,
+        # mode="disabled"
+    )
+    table = wandb.Table(dataframe=final_results)
+    wandb.log({"Statistics over seeds": table})
     wandb.run.finish()
-  results=pd.concat(results)
-  mean=results.mean()
-  std=results.std()
-  confidence_interval=2*std / np.sqrt(len(seeds))
-  data={}
-  for key in mean.keys():
-      data[key]=[mean[key],confidence_interval[key]]
-  final_results=pd.DataFrame.from_dict(data, orient='index', columns=['mean','confidence_interval'])
-  wandb.init(project="Dynamics", name=model_name,
-              # anonymous="allow",
-              config=config, 
-              # mode="disabled"
-              )
-  table=wandb.Table(dataframe=final_results)
-  wandb.log({"Statistics over seeds" : table})
-  wandb.run.finish()
+
 
 # reset the config to config init
-config=config_init.copy()
+config = config_init.copy()
 
-run_experiment(model_name='LearnDynamics_MINT_CLEVRER', params={})
+run_experiment(model_name="LearnDynamics_MINT_CLEVRER", params={})
+# run_experiment(model_name="LearnDynamics_MINTwoR_CLEVRER", params={})
