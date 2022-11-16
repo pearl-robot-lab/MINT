@@ -98,6 +98,7 @@ config_data={
     'num_keypoints':25,
     'batch_size':8,
 }
+args.nf_hidden_kp=config_data["num_keypoints"]
 args.height = config_data['input_height']
 args.width = config_data['input_width']
 args.n_kp=config_data['num_keypoints']

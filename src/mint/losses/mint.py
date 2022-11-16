@@ -29,11 +29,10 @@ class MINT(nn.Module):
         self.masked_entropy_loss_weight=config['masked_entropy_loss_weight']
         self.conditional_entropy_loss_weight=config['conditional_entropy_loss_weight']
         self.information_transport_loss_weight=config['information_transport_loss_weight']
-        # self.alpha=config['alpha_for_status_loss']
+        self.movement_weight = config['movement_weight']
         self.beta=config['beta_for_overlapping_loss']
         self.kappa=config['kappa_for_it_loss']
         self.status_weight=config['status_weight']
-        # self.difference_weight=config['difference_weight']
         self.overlap_weight=config['overlap_weight']
         self.count=0
 
@@ -160,7 +159,7 @@ class MINT(nn.Module):
         reconstruction_cost=reconstruction_cost.mean(dim=-1)
         # mean for each time frame
         # N x SF
-        information_transport_loss= reconstruction_cost + movement_cost
+        information_transport_loss= reconstruction_cost + self.movement_weight * movement_cost
         #######################################
         ############ Status loss ##############
         #######################################
@@ -185,8 +184,6 @@ class MINT(nn.Module):
                     + self.information_transport_loss_weight*information_transport_loss \
                     + self.overlap_weight*overlapping_loss \
                     + (1-masked_entropy_loss) * self.status_weight*status_loss
-        # if masked_entropy_loss.mean()<0.1:
-        #     mint_loss+=self.status_weight * status_loss
         # mean over time
         # N
         mint_loss=mint_loss.mean(dim=-1)

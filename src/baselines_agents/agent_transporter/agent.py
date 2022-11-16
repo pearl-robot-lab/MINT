@@ -5,6 +5,8 @@ from mint.data.dataset_from_magical import DatasetFromMAGICAL
 from mint.utils.trajectory_visualization import TrajectoryVisualizer
 from mint.utils.clevrer_qual_results import ResultCollector
 from baselines_agents.agent_transporter.models_kp import KeyPointNet
+# for transporter modified uncomment this line
+# from baselines_agents.agent_transporter.models_kp_modified import KeyPointNet
 
 import torch
 import torch.nn as nn
