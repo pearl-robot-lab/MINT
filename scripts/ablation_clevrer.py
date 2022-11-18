@@ -158,9 +158,6 @@ ablation_params = {
     "overlap_weight": 0.0,
 }
 region_sizes = [3, 5, 7]
-ks = [0, 0.5, 0.9, 1]
-ms = [0, 1]
-os = [2, 4]
 # enropy region_size ablation
 for r in region_sizes:
     name = f"(Ablation) IM ({r}x{r})"
@@ -168,25 +165,39 @@ for r in region_sizes:
     run_experiment(model_name=name, params=ablation_params)
 ablation_params["region_size"] = 3
 ablation_params["information_transport_loss_weight"] = 20
-# ablation for it loss
+ks = [0, 0.5, 0.9, 1]
+m=0
+# ablation for it loss without regularization
+ablation_params["movement_weight"] = 0
+ablation_params["overlap_weight"] = 0
+ablation_params["status_weight"] = 0
+for k in ks:
+    ablation_params["kappa_for_it_loss"] = k
+    name = f"(Ablation) IM +IT (m={m},k={k})"
+    run_experiment(model_name=name, params=ablation_params)
+ablation_params["kappa_for_it_loss"] = 0.5
+ablation_params["beta_for_overlapping_loss"] = 4
+k=0.5
+ms=[0,1]
+# ablation for regularizations
+# overlap with and without movement
+ablation_params["overlap_weight"] = 30
+ablation_params["status_weight"] = 0
 for m in ms:
     ablation_params["movement_weight"] = m
-    for k in ks:
-        ablation_params["kappa_for_it_loss"] = k
-        name = f"(Ablation) IM +IT (m={m},k={k})"
-        run_experiment(model_name=name, params=ablation_params)
-ablation_params["kappa_for_it_loss"] = 0.5
-ablation_params["movement_weight"] = 1.0
-m=config['movement_weight']
-k=config['kappa_for_it_loss']
-# ablation for overlapping loss
-ablation_params["overlap_weight"] = 30
-for o in os:
-    ablation_params["beta_for_overlapping_loss"] = o
-    name = f"(Ablation) IM +IT (m={m},k={k}) + O({o})"
+    name = f"(Ablation) IM +IT (m={m}) + O"
     run_experiment(model_name=name, params=ablation_params)
-ablation_params["beta_for_overlapping_loss"] = 4
-b=config['beta_for_overlapping_loss']
-# run the full experiment
-name = f"(Ablation) IM +IT (m={m},k={k}) + O({b})"
-run_experiment(model_name=name, params=ablation_params)
+# status with and without movement
+ablation_params["overlap_weight"] = 0
+ablation_params["status_weight"] = 10
+for m in ms:
+    ablation_params["movement_weight"] = m
+    name = f"(Ablation) IM +IT (m={m}) + S"
+    run_experiment(model_name=name, params=ablation_params)
+# status and overlap with and without movement
+ablation_params["overlap_weight"] = 30
+ablation_params["status_weight"] = 10
+for m in ms:
+    ablation_params["movement_weight"] = m
+    name = f"(Ablation) IM +IT (m={m}) + O + S"
+    run_experiment(model_name=name, params=ablation_params)
