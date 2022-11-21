@@ -128,16 +128,16 @@ ablation_params = {
     "threshold_for_heatmap": 0.1,
     "thresholded_heatmap_scale": 3.5,
     "bandwidth": 0.001,
-    "beta_for_overlapping_loss": 4.0, # Static
+    "beta_for_overlapping_loss": 4.0, # not temporal
     "kappa_for_it_loss": 0.0, # Temporal 
     "movement_weight": 0.0, # Temporal
-    "masked_entropy_loss_weight": 100.0, # Static
+    "masked_entropy_loss_weight": 100.0, # not temporal
     "conditional_entropy_loss_weight": 0.0, # Temporal
-    "status_weight": 10.0, # Static
+    "status_weight": 10.0, # not temporal
     "information_transport_loss_weight": 0.0, # Temporal
-    "overlap_weight": 30.0, # Static
+    "overlap_weight": 30.0, # not temporal
 }
-run_experiment(model_name="MINT_static", params=ablation_params)
+run_experiment(model_name="MINTwoTemp", params=ablation_params)
 
 # reset the config to config init
 config = config_init.copy()
