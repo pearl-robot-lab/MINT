@@ -1,0 +1,27 @@
+MIME/
+SIMITATE/
+CLEVRER/
+results/
+old_results/
+runs/
+datasets/
+wandb/
+videos/
+saved_models/
+img/
+demos/
+new_videos/
+
+.vscode/
+build/
+dist/
+
+# Compile files
+**/__pycache__/
+*.pyc
+*.egg-info
+*-metadata
+*.mp4
+
+*.txt
+*.out
