@@ -1,5 +1,5 @@
 # MINT
-Maximum Information keypoiNTs : An information-theoretic approach to unsupervised keypoint representation learning <br>
+Maximum Information keypoiNTs : Entropy-driven Unsupervised Keypoint Representation Learning in Videos (ICML 2023) <br>
 [Paper](https://arxiv.org/abs/2209.15404), [Project website](https://sites.google.com/view/mint-kp/home)
 
 The code structre:
@@ -139,14 +139,11 @@ sys.path.append('src')
 ## Citation
 If you make use of this code in your own work, please cite our paper:
 ```
-@article{younes2022mint,
-  title={An information-theoretic approach to unsupervised keypoint representation learning},
+@article{younes2023mint,
+  title={Entropy-driven Unsupervised Keypoint Representation Learning in Videos},
   author={Younes, Ali and Schaub-Meyer, Simone and Chalvatzaki, Georgia},
-  journal={arXiv preprint arXiv:2209.15404},
-  year={2022}
+  booktitle={International Conference on Machine Learning},
+  year={2023},
+  organization={PMLR}
 }
 ```
-
-
-
-
