@@ -1,6 +1,10 @@
 # MINT
-Maximum Information keypoiNTs : Entropy-driven Unsupervised Keypoint Representation Learning in Videos (ICML 2023) <br>
-[Paper](https://arxiv.org/abs/2209.15404), [Project website](https://sites.google.com/view/mint-kp/home)
+Maximum Information keypoiNTs : <br>
+Entropy-driven Unsupervised Keypoint Representation Learning in Videos (ICML 2023) <br>
+[Ali Younes](https://irosalab.com/people/ali-younes/), [Simone Schaub-Meyer](https://schaubsi.github.io/), [Georgia Chalvatzak](https://irosalab.com/people/georgia-chalvatzaki/) <br>
+
+Link to [Paper](https://arxiv.org/abs/2209.15404) <br>
+[Project website](https://sites.google.com/view/mint-kp/home)
 
 The code structre:
 ```
