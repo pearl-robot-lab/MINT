@@ -1,9 +1,7 @@
 # MINT
 Maximum Information keypoiNTs : <br>
-Entropy-driven Unsupervised Keypoint Representation Learning in Videos (ICML 2023) <br>
+[Entropy-driven Unsupervised Keypoint Representation Learning in Videos](https://arxiv.org/abs/2209.15404)  (ICML 2023) <br>
 [Ali Younes](https://irosalab.com/people/ali-younes/), [Simone Schaub-Meyer](https://schaubsi.github.io/), [Georgia Chalvatzak](https://irosalab.com/people/georgia-chalvatzaki/) <br>
-
-Link to [Paper](https://arxiv.org/abs/2209.15404) <br>
 [Project website](https://sites.google.com/view/mint-kp/home)
 
 The code structre:
@@ -134,14 +132,14 @@ You can get the final statstics offline by running:
 ```
 
 ## Miscellaneous
-- If your python compliter can't find a module from mint package, add the following before the imports :
+- If your python compiler can't find a module from mint package, add the following to the python script, before the imports :
 ```
 import sys
 sys.path.append('src')
 ```
 
 ## Citation
-If you make use of this code in your own work, please cite our paper:
+If you found our code useful, please cite our paper:
 ```
 @article{younes2023mint,
   title={Entropy-driven Unsupervised Keypoint Representation Learning in Videos},
